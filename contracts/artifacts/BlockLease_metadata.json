@@ -1,0 +1,204 @@
+{
+	"compiler": {
+		"version": "0.8.18+commit.87f61d96"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "landlordAddr",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "tenantAddr",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "propertyName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "propertyLocation",
+						"type": "string"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "landlord",
+				"outputs": [
+					{
+						"internalType": "address payable",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "agrees",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "lease",
+				"outputs": [
+					{
+						"internalType": "enum BlockLease.LeaseState",
+						"name": "state",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "rentAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "rentalDuration",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "property",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "location",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "rentAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "rentDuration",
+						"type": "uint256"
+					}
+				],
+				"name": "setTerms",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "signAgreement",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tenant",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "agrees",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unsignAgreement",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"constructor": {
+					"details": "Initialize the lease contract. Landlord, tenant, and property details cannot be changed for a contract.",
+					"params": {
+						"landlordAddr": "the account address of the landlord ",
+						"propertyLocation": "the location of the property being leased out",
+						"propertyName": "the name of the property being leased out",
+						"tenantAddr": "the account address of the tenant"
+					}
+				},
+				"setTerms(uint256,uint256)": {
+					"details": "Set the terms for lease. Can be called by the tenant or the landlord while the lease is inactive.",
+					"params": {
+						"rentAmount": "amount of rent in GWei",
+						"rentDuration": "length of lease agreement in months"
+					}
+				},
+				"signAgreement()": {
+					"details": "The tenant or landlord can accept the agreement.  Both parties have to agree for the contract to be put in active state."
+				},
+				"unsignAgreement()": {
+					"details": "The tenant or landlord can revoke their agreement to the lease while the lease is inactive."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/BlockLease.sol": "BlockLease"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/BlockLease.sol": {
+			"keccak256": "0x52ecd5a940941189c497ab3bc1c61ad8885c3877b2c934d4846d2e990c4fe01b",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://9353c7729901851fc8541262edc5fee7f6be027ea59ab5494f3e03568a7c3c73",
+				"dweb:/ipfs/QmSUkb221pncoLj4uUDYr93jouRp8JbwvVZ4hZfQviZAnK"
+			]
+		}
+	},
+	"version": 1
+}
