@@ -10,7 +10,7 @@ contract BlockLease {
     
     // Defines information for tenant
     struct Tenant {
-        address addr;
+        address payable addr;
         bool agrees;
     }
 
@@ -21,12 +21,13 @@ contract BlockLease {
     }
     
     // The lease can be in one of these few states
-    enum LeaseState {INACTIVE, ACTIVE, TERMINATED, COMPLETE}
+    enum LeaseState {INACTIVE, PENDING_DEPOSIT, ACTIVE, TERMINATED, PENDING_RETURN, FINISHED}
 
     // Defines information about the lease
     struct Lease {
         LeaseState state;
         uint256 rentAmount;
+        uint256 securityDeposit;
         uint256 rentalDuration;
     }
 
@@ -35,6 +36,36 @@ contract BlockLease {
     Tenant public tenant;
     Property public property;
     Lease public lease;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+
+    /** 
+     * @dev The tenant can deposit money for the security deposit to activate the lease
+     */
+    function depositSecurityDeposit() payable public {
+        require(msg.sender == tenant.addr, "Only tenent can send security deposit.");
+        require(lease.state == LeaseState.PENDING_DEPOSIT, "The lease should be in pending deposit state.");
+        require(msg.value == lease.securityDeposit, "The value being deposited should equal the security deposit amount.");
+
+        // Security deposit is received - the lease is now active.
+        // TODO: Change pending return to active later.
+        lease.state = LeaseState.PENDING_RETURN;
+    }
+
+    /** 
+     * @dev The tenant can withdraw the security deposit once the lease is complete.
+     */
+    function withdrawSecurityDeposit() payable public {
+        require(msg.sender == tenant.addr, "Only tenent can withdraw security deposit.");
+        require(lease.state == LeaseState.PENDING_RETURN, "The lease should be in pending return state.");
+
+        // Withdraw security deposit.
+        tenant.addr.transfer(lease.securityDeposit);
+
+         // Security deposit is returned - the lease is now finished.
+        lease.state = LeaseState.FINISHED;
+    }
 
     /** 
      * @dev The tenant or landlord can accept the agreement. 
@@ -53,8 +84,8 @@ contract BlockLease {
         }
 
         if (landlord.agrees && tenant.agrees) {
-            // Both have agreed to the terms, set the lease state to active.
-            lease.state = LeaseState.ACTIVE;
+            // Both have agreed to the terms, set the lease state to pending deposit.
+            lease.state = LeaseState.PENDING_DEPOSIT;
         }
     }
 
@@ -63,7 +94,7 @@ contract BlockLease {
      */
     function unsignAgreement() public {
         require(msg.sender == landlord.addr || msg.sender == tenant.addr, "Only owner or tenent can unsign agreement.");
-        require(lease.state == LeaseState.INACTIVE, "The lease has to be in inactive state to be unsigned.");
+        require(lease.state == LeaseState.INACTIVE || lease.state == LeaseState.PENDING_DEPOSIT, "The lease should not have actived.");
         if(msg.sender == landlord.addr) {
             require (landlord.agrees == true, "Landlord has not signed the agreement yet.");
             landlord.agrees = false;
@@ -72,20 +103,23 @@ contract BlockLease {
             require (tenant.agrees == true, "Tenant has not signed the agreement yet.");
             tenant.agrees = false;
         }
+        // Make it inactive - in case it was pending deposit, it no longer will.
+        lease.state == LeaseState.INACTIVE;
     }
 
     /** 
      * @dev Set the terms for lease. Can be called by the tenant or the landlord while the lease is inactive.
-     * @param rentAmount amount of rent in GWei
+     * @param rentAmount amount of rent in Wei
      * @param rentDuration length of lease agreement in months
      */
-    function setTerms(uint256 rentAmount, uint256 rentDuration) public {
+    function setTerms(uint256 rentAmount, uint256 rentDuration, uint256 securityDeposit) public {
         require(msg.sender == landlord.addr || msg.sender == tenant.addr, "Only owner or tenent can set terms.");
         require(lease.state == LeaseState.INACTIVE, "The lease has to be in inactive state to set terms.");
 
         // Set the terms of the lease
         lease.rentAmount = rentAmount;
         lease.rentalDuration = rentDuration;
+        lease.securityDeposit = securityDeposit;
         
         // If terms are updated, parties have to resign.
         landlord.agrees = false;
@@ -109,7 +143,7 @@ contract BlockLease {
 
         // Set the details of the contract
         landlord.addr = payable(landlordAddr);
-        tenant.addr = tenantAddr;
+        tenant.addr = payable(tenantAddr);
         property.name = propertyName;
         property.location = propertyLocation;
 

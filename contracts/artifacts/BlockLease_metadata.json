@@ -32,6 +32,38 @@
 				"type": "constructor"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "Transfer",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "depositSecurityDeposit",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "landlord",
 				"outputs": [
@@ -61,6 +93,11 @@
 					{
 						"internalType": "uint256",
 						"name": "rentAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "securityDeposit",
 						"type": "uint256"
 					},
 					{
@@ -101,6 +138,11 @@
 						"internalType": "uint256",
 						"name": "rentDuration",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "securityDeposit",
+						"type": "uint256"
 					}
 				],
 				"name": "setTerms",
@@ -120,7 +162,7 @@
 				"name": "tenant",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "address payable",
 						"name": "addr",
 						"type": "address"
 					},
@@ -139,6 +181,13 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "withdrawSecurityDeposit",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -153,10 +202,13 @@
 						"tenantAddr": "the account address of the tenant"
 					}
 				},
-				"setTerms(uint256,uint256)": {
+				"depositSecurityDeposit()": {
+					"details": "The tenant can deposit money for the security deposit to activate the lease"
+				},
+				"setTerms(uint256,uint256,uint256)": {
 					"details": "Set the terms for lease. Can be called by the tenant or the landlord while the lease is inactive.",
 					"params": {
-						"rentAmount": "amount of rent in GWei",
+						"rentAmount": "amount of rent in Wei",
 						"rentDuration": "length of lease agreement in months"
 					}
 				},
@@ -165,6 +217,9 @@
 				},
 				"unsignAgreement()": {
 					"details": "The tenant or landlord can revoke their agreement to the lease while the lease is inactive."
+				},
+				"withdrawSecurityDeposit()": {
+					"details": "The tenant can withdraw the security deposit once the lease is complete."
 				}
 			},
 			"version": 1
@@ -192,11 +247,11 @@
 	},
 	"sources": {
 		"contracts/BlockLease.sol": {
-			"keccak256": "0x52ecd5a940941189c497ab3bc1c61ad8885c3877b2c934d4846d2e990c4fe01b",
+			"keccak256": "0xb4a7d3123f5a2644e60b878042b396b2898cfa5127896b7c0552159641e9017b",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://9353c7729901851fc8541262edc5fee7f6be027ea59ab5494f3e03568a7c3c73",
-				"dweb:/ipfs/QmSUkb221pncoLj4uUDYr93jouRp8JbwvVZ4hZfQviZAnK"
+				"bzz-raw://5d851f2f2792fc484a16f06d047f242596e880ad3ce8ba725c8e7e68d7d5c5ce",
+				"dweb:/ipfs/QmPLsPqc6vGZDCRq1gwUG3hJWMG6Zbcwo5PzLLuc19FUKK"
 			]
 		}
 	},
