@@ -32,35 +32,17 @@
 				"type": "constructor"
 			},
 			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "from",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "value",
-						"type": "uint256"
-					}
-				],
-				"name": "Transfer",
-				"type": "event"
-			},
-			{
 				"inputs": [],
 				"name": "depositSecurityDeposit",
 				"outputs": [],
 				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "evict",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -97,16 +79,33 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "securityDeposit",
+						"name": "rentalDuration",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "rentalDuration",
+						"name": "startDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "latePenaltyPerDay",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "securityDeposit",
 						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "payRent",
+				"outputs": [],
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -136,7 +135,17 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "rentDuration",
+						"name": "rentalDuration",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "startDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "latePenaltyPerDay",
 						"type": "uint256"
 					},
 					{
@@ -184,9 +193,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "withdrawSecurityDeposit",
+				"name": "vacate",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -205,11 +214,20 @@
 				"depositSecurityDeposit()": {
 					"details": "The tenant can deposit money for the security deposit to activate the lease"
 				},
-				"setTerms(uint256,uint256,uint256)": {
+				"evict()": {
+					"details": "Called by landlord if the tenant hasn't met the terms of the lease "
+				},
+				"payRent()": {
+					"details": "The tenant can deposit money for the security deposit to activate the lease"
+				},
+				"setTerms(uint256,uint256,uint256,uint256,uint256)": {
 					"details": "Set the terms for lease. Can be called by the tenant or the landlord while the lease is inactive.",
 					"params": {
+						"latePenaltyPerDay": "late penalty per day in Wei",
 						"rentAmount": "amount of rent in Wei",
-						"rentDuration": "length of lease agreement in months"
+						"rentalDuration": "length of lease agreement in months",
+						"securityDeposit": "security deposit in Wei ",
+						"startDate": "start date of the agreement (as a unix timestamp)"
 					}
 				},
 				"signAgreement()": {
@@ -218,8 +236,8 @@
 				"unsignAgreement()": {
 					"details": "The tenant or landlord can revoke their agreement to the lease while the lease is inactive."
 				},
-				"withdrawSecurityDeposit()": {
-					"details": "The tenant can withdraw the security deposit once the lease is complete."
+				"vacate()": {
+					"details": "Called when the tenant wants to leave the house. This is provided the terms of the lease have been met. Security deposit is transferred back"
 				}
 			},
 			"version": 1
@@ -247,11 +265,11 @@
 	},
 	"sources": {
 		"contracts/BlockLease.sol": {
-			"keccak256": "0xb4a7d3123f5a2644e60b878042b396b2898cfa5127896b7c0552159641e9017b",
+			"keccak256": "0x8a3606a7b14eabc3c2246139126ef28d9bdd012f9612c0de94b17a36dee82fa1",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://5d851f2f2792fc484a16f06d047f242596e880ad3ce8ba725c8e7e68d7d5c5ce",
-				"dweb:/ipfs/QmPLsPqc6vGZDCRq1gwUG3hJWMG6Zbcwo5PzLLuc19FUKK"
+				"bzz-raw://a753b0a257155f87b807172e3025935d0a32b23b0d3ea0837b980f4566b9730f",
+				"dweb:/ipfs/QmZ9RAcmFkVWncYksfh7ihDGvByyuKBWjyy2EG4v34MbHN"
 			]
 		}
 	},
